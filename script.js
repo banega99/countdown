@@ -171,9 +171,9 @@ function startTimer() {
         sekunde = date.getSeconds();
         satiOd = 23 - sati;
         minutiOd = 59 - minuti;
-        sekundeOd = 60 - sekunde;
+        sekundeOd = 59 - sekunde;
         dan = 1000 * 60 * 60 * 24;
-        kontis.innerHTML = `${Math.floor((odbrojavanje - date) / dan)}d: ${satiOd}č: ${minutiOd}m: ${sekundeOd == 60 ? '00' : sekundeOd}s`;
+        kontis.innerHTML = `${String(Math.floor((odbrojavanje - date) / dan)).padStart(2, 0)}d: ${String(satiOd).padStart(2, 0)}č: ${String(minutiOd).padStart(2, 0)}m: ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
         // if ((Math.floor((odbrojavanje - date) / dan)) == '0' && satiOd == '0' && minutiOd == '0' & sekundeOd == '0') {
         if (odbrojavanje.getTime() == date.getTime()) {
             clearInterval(timer)
