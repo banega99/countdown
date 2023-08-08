@@ -174,7 +174,9 @@ function startTimer() {
         sekundeOd = 60 - sekunde;
         dan = 1000 * 60 * 60 * 24;
         kontis.innerHTML = `${Math.floor((odbrojavanje - date) / dan)}d: ${satiOd}č: ${minutiOd}m: ${sekundeOd == 60 ? '00' : sekundeOd}s`;
-        if ((Math.floor((odbrojavanje - date) / dan)) == '0' && satiOd == '0' && minutiOd == '0' & sekundeOd == '0') {
+        // if ((Math.floor((odbrojavanje - date) / dan)) == '0' && satiOd == '0' && minutiOd == '0' & sekundeOd == '0') {
+        if (odbrojavanje.getTime() == date.getTime()) {
+            clearInterval(timer)
             h1.innerHTML = 'Dočekali ste!';
         }
     }
