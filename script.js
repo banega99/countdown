@@ -67,7 +67,7 @@ function getDate(year, month) {
     currentYear = year
     monthNames = [
         "Januar", "Februar", "Mart", "April", "Maj", "Jun",
-        "Jul", "Avgust", "Septembar", "Octobar", "Novembar", "Decembar"
+        "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"
     ]
     chosenMonth = monthNames[month - 1]
 
