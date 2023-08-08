@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="shortcut icon" href="images/weekly-calendar-monthly-calendar-svgrepo-com.svg" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
+    <title>Calendar</title>
+</head>
+
+<body>
+    <table cellspacing="0">
+        <div class="holder">
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+            <div class="hold"></div>
+        </div>
+        <thead>
+            <tr>
+                <th class="thleft">
+                    <div class="arrow left"></div>
+                </th>
+                <th colspan="5" id="title">
+                    <select name="" id="month">
+                    </select>
+                    <select name="" id="year">
+                    </select>
+                </th>
+                <th class="thright">
+                    <div class="arrow right"></div>
+                </th>
+            </tr>
+            <tr>
+                <th>Pon</th>
+                <th>Uto</th>
+                <th>Sre</th>
+                <th>Čet</th>
+                <th>Pet</th>
+                <th>Sub</th>
+                <th>Ned</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div class="container jedan">
+        <h1 id="countText">Unesite željeni datum ili izaberite na kalendaru:</h1>
+        <form class="form-inline" action="">
+            <div class="form-group d-flex flex-row justify-content-evenly">
+                <input class="form-control ml-2 w-25" type="text" name="godina" id="godina" placeholder="Godina">
+                <input class="form-control ml-2 w-25" type="text" name="mesec" id="mesec" placeholder="Mesec">
+                <input class="form-control ml-2 w-25" type="text" name="dan" id="dan" placeholder="Dan">
+                <button type="button" class="start btn btn-primary ml-2">Pokreni</button>
+            </div>
+        </form>
+    </div>
+    <div class="container dva">
+        <h1></h1>
+        <div class="row">
+            <div class="col-8 offset-2 odbrojavanje"></div>
+            <button class="end btn btn-danger d-none w-50 me-auto ms-auto">Zaustavi</button>
+        </div>
+        <!--<div class="row justify-content-center">
+            <div class="col slika">
+              <img src="images/Christmas-Santa-Sleigh.svg" alt="novagodina" srcset="">
+            </div>
+        </div>-->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    /* padding: 0; */
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}
+
+table {
+    position: relative;
+    margin: 50px auto;
+    border: 4px solid black;
+    border-collapse: collapse;
+    border-radius: 4px;
+    border-style: hidden;
+    /* hide standard table (collapsed) border */
+    box-shadow: 0 0 0 4px black;
+    /* this draws the table border  */
+}
+
+thead {
+    background-color: rgb(65, 143, 211);
+    color: white;
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+thead tr {
+    margin-top: 5px !important;
+}
+
+select {
+    text-align: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    border: none;
+    background-color: transparent;
+    -webkit-appearance: none;
+}
+select:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+select:focus {
+    border: none;
+    outline: none;
+}
+select::-ms-expand {
+    display: none;
+  }
+option {
+    color: black;
+}
+
+td {
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0;
+    width: 70px;
+    height: 60px;
+    border: 1px dashed black;
+    text-align: end;
+    vertical-align: top;
+}
+
+tr td:last-child {
+    background-color: rgb(233, 130, 116);
+    /* color: white; */
+}
+
+tr:first-child td {
+    border-top: none;
+}
+
+.arrow {
+    padding: 0;
+    border-top: 3px solid;
+    border-right: 3px solid;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    display: inline-block;
+}
+
+.left {
+    transform: rotate(-135deg);
+}
+
+.arrow:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.thleft {
+    text-align: end;
+    padding-bottom: 3px;
+}
+
+.thright {
+    text-align: start;
+    padding-bottom: 3px;
+}
+
+.current-day {
+    background-color: rgb(236, 55, 10);
+    color: white;
+
+}
+
+.holder {
+    position: absolute;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: center;
+    left: 50%;
+    top: 43.3px;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.hold {
+    width: 5px;
+    height: 10px;
+    border-radius: 3px;
+    background-color: black;
+}
+
+.hold:not(:last-child) {
+    margin-right: 10px;
+}
+
+#title {
+    text-align: center;
+}
+
+.dan:hover {
+    cursor: pointer;
+    background-color: rgba(0, 255, 255, 0.63);
+}
+
+.active {
+    background-color: aqua!important;
+}
+
+.col-8 {
+    text-align: center;
+    font-size: 60px;
+}
+h1 {
+    text-align: center;
+}
+
+.start {
+    background-color: rgb(65, 143, 211)
+}
