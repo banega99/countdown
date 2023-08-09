@@ -5,6 +5,13 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
 }
 
+.table-holder {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+    margin: 40px auto;
+}
+
 table {
     position: relative;
     margin: 50px auto;
@@ -113,7 +120,7 @@ tr:first-child td {
     display: flex;
     justify-content: center;
     left: 50%;
-    top: 43.3px;
+    top: -7px;
     transform: translateX(-50%);
     z-index: 100;
 }
@@ -152,4 +159,41 @@ h1 {
 
 .start {
     background-color: rgb(65, 143, 211)
+}
+
+input {
+    width: 100px !important;
+}
+input {
+    content: '0';
+}
+
+.divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media(max-width:768px) {
+    input {
+        width: 25% !important;
+    }
+    input::placeholder {
+        font-size: 13px;
+    }
+}
+
+@media(max-width: 520px) {
+    table {
+        width: 95%;
+    }
+    .col-8 {
+        font-size: 50px;
+    }
+
+    
+    input::placeholder {
+        font-size: 10px !important;
+    }
+    
 }

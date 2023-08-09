@@ -17,8 +17,12 @@ let form = document.querySelector('form')
 let godinaIz = document.querySelector('#godina');
 let mesec = document.querySelector('#mesec');
 let danIz = document.querySelector('#dan');
+let satiIz = document.querySelector('#sati');
+let minutiIz = document.querySelector('#minuti');
 let dugme = document.querySelector('button');
 let dugmeZaustavi = document.querySelector('.end');
+let satiVal
+let minutiVal
 let sati
 let minuti
 let sekunde
@@ -61,6 +65,11 @@ arrows.forEach(arrow => {
 })
 
 function getDate(year, month) {
+    godinaIz.setAttribute('min', year)
+    mesec.setAttribute('min', todaysDate.getMonth())
+    mesec.setAttribute('max', 12 + 1)
+    danIz.setAttribute('min', todaysDate.getDate())
+    if(Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 1)
     monthDropdown.innerHTML = ''
     yearDropdown.innerHTML = ''
     currentMonth = month
@@ -79,6 +88,7 @@ function getDate(year, month) {
     }
     let firstDay = new Date(year, month - 1, 1)
     let lastDay = new Date(year, month, 0)
+    danIz.setAttribute('max', lastDay.getDate() + 1)
     let FDM = firstDay.getDay()
     let LDM = lastDay.getDay()
 
@@ -152,31 +162,56 @@ function checkInputVal(val1, val2) {
     if (val1 && val2) dugme.removeAttribute('disabled')
 }
 
-godinaIz.addEventListener('input', function () {
+godinaIz.addEventListener('change', function () {
     if (mesec.value && danIz.value) dugme.removeAttribute('disabled')
+    if(Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 0)
+    else mesec.setAttribute('min', todaysDate.getMonth() + 1)
 })
-danIz.addEventListener('input', function () {
+danIz.addEventListener('change', function () {
     if (mesec.value && godinaIz.value) dugme.removeAttribute('disabled')
+    if(danIz.value == danIz.max) danIz.value = Number(danIz.min) + 1
+    if(danIz.value == danIz.min) danIz.value = Number(danIz.max )- 1
 })
-mesec.addEventListener('input', function () {
+mesec.addEventListener('change', function () {
     if (godinaIz.value && danIz.value) dugme.removeAttribute('disabled')
+    console.log('change')
+    danIz.setAttribute('max', new Date(currentYear, mesec.value, 0).getDate() + 1)
+    if(Number(mesec.value) > todaysDate.getMonth() + 1) danIz.setAttribute('min', 0)
 })
 
-// let mesecBroj = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+document.querySelectorAll('input').forEach((inp, i) => {
+    inp.addEventListener('input', function(e){
+        if(inp.value.length > 2 && inp.value[0] == '0') {
+            inp.value = inp.value.slice(-2)
+        }
+        console.log(inp.value.slice(1, inp.value.length - 1))
+        if(e.inputType != "deleteContentBackward" && inp.value.length == 1){
+            inp.value = inp.value.padStart(2, 0)  
+        } 
+        console.log(inp.value.length)
+        if(inp.value == inp.max && i > 0) inp.value = Number(inp.min) + 1
+        if(inp.value == inp.min && i > 0) inp.value = Number(inp.max )- 1
+        // if(inp.value.length > 1) inp.value = Array(inp.value).splice(0, 1)
+        // if(i < 3 && inp.value == '00') inp.value = ''
+        // if(Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 1)
+        // else mesec.setAttribute('min', todaysDate.getMonth + 1)
+    })
+
+})
 
 function startTimer() {
     function tick() {
-        date = new Date()
-        sati = date.getHours();
-        minuti = date.getMinutes();
-        sekunde = date.getSeconds();
-        satiOd = 23 - sati;
-        minutiOd = 59 - minuti;
+        todaysDate = new Date()
+        sati = todaysDate.getHours();
+        minuti = todaysDate.getMinutes();
+        sekunde = todaysDate.getSeconds();
+        satiOd = satiVal - sati;
+        minutiOd = minutiVal - minuti;
         sekundeOd = 59 - sekunde;
         dan = 1000 * 60 * 60 * 24;
-        kontis.innerHTML = `${String(Math.floor((odbrojavanje - date) / dan)).padStart(2, 0)}d: ${String(satiOd).padStart(2, 0)}č: ${String(minutiOd).padStart(2, 0)}m: ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
+        kontis.innerHTML = `${String(Math.floor((odbrojavanje - todaysDate) / dan)).padStart(2, 0)}d: ${String(satiOd).padStart(2, 0)}č: ${String(minutiOd).padStart(2, 0)}m: ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
         // if ((Math.floor((odbrojavanje - date) / dan)) == '0' && satiOd == '0' && minutiOd == '0' & sekundeOd == '0') {
-        if (odbrojavanje.getTime() == date.getTime()) {
+        if (odbrojavanje.getTime() == todaysDate.getTime()) {
             clearInterval(timer)
             h1.innerHTML = 'Dočekali ste!';
         }
@@ -198,63 +233,20 @@ dugmeZaustavi.addEventListener('click', function () {
 })
 
 function brojac() {
-    
+    satiVal = satiIz.value ? 23 + Number(satiIz.value) : 23
+    minutiVal = minutiIz.value ? 59 + Number(minutiIz.value) : 59
+    monthNames = [
+        "januar", "februar", "mart", "april", "maj", "jun",
+        "jul", "avgust", "septembar", "oktobar", "novembar", "decembar"
+    ]
     if (timer) clearInterval(timer)
-    switch (mesec.value) {
-        case 'Januar':
-        case 'januar':
-            mesec.value = 1;
-            break;
-        case 'Februar':
-        case 'februar':
-            mesec.value = 2;
-            break;
-        case 'Mart':
-        case 'mart':
-            mesec.value = 3;
-            break;
-        case 'April':
-        case 'april':
-            mesec.value = 4;
-            break;
-        case 'Maj':
-        case 'maj':
-            mesec.value = 5;
-            break;
-        case 'Jun':
-        case 'jun':
-            mesec.value = 6;
-            break;
-        case 'Jul':
-        case 'jul':
-            mesec.value = 7;
-            break;
-        case 'Avgust':
-        case 'avgust':
-            mesec.value = 8;
-            break;
-        case 'Septembar':
-        case 'septembar':
-            mesec.value = 9;
-            break;
-        case 'Oktobar':
-        case 'oktobar':
-            mesec.value = 10;
-            break;
-        case 'Novembar':
-        case 'novembar':
-            mesec.value = 11;
-            break;
-        case 'Decembar':
-        case 'decembar':
-            mesec.value = 12;
-            break;
-        default:
-            break;
-    };
-    var date = new Date();
-    odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value));
-    if (odbrojavanje.getTime() < date.getTime()) {
+    for (let i = 0; i < monthNames.length; i++) {
+        if(mesec.value.toLowerCase() == monthNames[i]) mesec.value = i+1
+    }
+    
+    console.log( new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value)))
+    odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
+    if (odbrojavanje.getTime() < todaysDate.getTime()) {
         alert('Ne možete uneti datum koji je već prošao!')
         // clearInterval(timer)
         return false
@@ -267,5 +259,6 @@ function brojac() {
     godinaIz.value = ''
     mesec.value = ''
     danIz.value = ''
-    godinaIz.focus()
+    satiIz.value = ''
+    minutiIz.value = ''
 }

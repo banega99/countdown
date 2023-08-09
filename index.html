@@ -14,7 +14,10 @@
 </head>
 
 <body>
-    <table cellspacing="0">
+    <div>
+        <h1>Odbrojavanje ⏱️</h1>
+    </div>
+    <div class="table-holder">
         <div class="holder">
             <div class="hold"></div>
             <div class="hold"></div>
@@ -38,43 +41,55 @@
             <div class="hold"></div>
             <div class="hold"></div>
         </div>
-        <thead>
-            <tr>
-                <th class="thleft">
-                    <div class="arrow left"></div>
-                </th>
-                <th colspan="5" id="title">
-                    <select name="" id="month">
-                    </select>
-                    <select name="" id="year">
-                    </select>
-                </th>
-                <th class="thright">
-                    <div class="arrow right"></div>
-                </th>
-            </tr>
-            <tr>
-                <th>Pon</th>
-                <th>Uto</th>
-                <th>Sre</th>
-                <th>Čet</th>
-                <th>Pet</th>
-                <th>Sub</th>
-                <th>Ned</th>
-            </tr>
-        </thead>
-        <tbody>
+        <table cellspacing="0">
 
-        </tbody>
-    </table>
+            <thead>
+                <tr>
+                    <th class="thleft">
+                        <div class="arrow left"></div>
+                    </th>
+                    <th colspan="5" id="title">
+                        <select name="" id="month">
+                        </select>
+                        <select name="" id="year">
+                        </select>
+                    </th>
+                    <th class="thright">
+                        <div class="arrow right"></div>
+                    </th>
+                </tr>
+                <tr>
+                    <th>Pon</th>
+                    <th>Uto</th>
+                    <th>Sre</th>
+                    <th>Čet</th>
+                    <th>Pet</th>
+                    <th>Sub</th>
+                    <th>Ned</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
     <div class="container jedan">
         <h1 id="countText">Unesite željeni datum ili izaberite na kalendaru:</h1>
         <form class="form-inline" action="">
-            <div class="form-group d-flex flex-row justify-content-evenly">
-                <input class="form-control ml-2 w-25" type="text" name="godina" id="godina" placeholder="Godina">
-                <input class="form-control ml-2 w-25" type="text" name="mesec" id="mesec" placeholder="Mesec">
-                <input class="form-control ml-2 w-25" type="text" name="dan" id="dan" placeholder="Dan">
-                <button type="button" class="start btn btn-primary ml-2">Pokreni</button>
+            <div class="form-group d-flex flex-column justify-content-center text-center">
+                <div class="d-flex flex-row justify-content-center align-content-center">
+                    <input class="form-control me-1" type="number" name="godina" id="godina" placeholder="Godina">
+                    <div class="me-1 divider">-</div>
+                    <input class="form-control me-1" type="number" name="mesec" id="mesec" placeholder="Mesec">
+                    <div class="me-1 divider">-</div>
+                    <input class="form-control me-1" type="number" name="dan" id="dan" min="1" placeholder="Dan">
+                    <div class="me-1 divider">-</div>
+                    <input class="form-control me-1" type="number" name="sati" id="sati" min="-1" max="24" placeholder="Sati">
+                    <div class="me-1 divider">:</div>
+                    <input class="form-control" type="number" name="minuti" id="minuti" min="-1" max="60" placeholder="Minuti">
+                </div>
+                <button type="button" class="start btn btn-primary mt-3 w-50 me-auto ms-auto">Pokreni</button>
             </div>
         </form>
     </div>
