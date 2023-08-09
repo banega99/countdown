@@ -113,6 +113,7 @@ function drawCalendar(weeks) {
             let td = document.createElement('td')
             td.textContent = week[j]
             td.classList.add('dan')
+            if(td.innerText == '')td.classList.remove('dan')
             td.setAttribute('data-id', week[j])
             tr.appendChild(td)
             tableBody.appendChild(tr)
@@ -128,7 +129,7 @@ function drawCalendar(weeks) {
 }
 
 table.addEventListener('click', function (e) {
-    if (!e.target.classList.contains('dan')) return
+    if (!e.target.classList.contains('dan') && e.target.innerText == '') return
     let tdDan = e.target
     document.querySelectorAll('.dan').forEach(dan => dan.classList.remove('active'))
     tdDan.classList.add('active')
