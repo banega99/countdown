@@ -69,7 +69,7 @@ function getDate(year, month) {
     mesec.setAttribute('min', todaysDate.getMonth())
     mesec.setAttribute('max', 12 + 1)
     danIz.setAttribute('min', todaysDate.getDate())
-    if(Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 1)
+    if (Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 1)
     monthDropdown.innerHTML = ''
     yearDropdown.innerHTML = ''
     currentMonth = month
@@ -123,7 +123,7 @@ function drawCalendar(weeks) {
             let td = document.createElement('td')
             td.textContent = week[j]
             td.classList.add('dan')
-            if(td.innerText == '')td.classList.remove('dan')
+            if (td.innerText == '') td.classList.remove('dan')
             td.setAttribute('data-id', week[j])
             tr.appendChild(td)
             tableBody.appendChild(tr)
@@ -139,14 +139,15 @@ function drawCalendar(weeks) {
 }
 
 table.addEventListener('click', function (e) {
-    if (!e.target.classList.contains('dan') && e.target.innerText == '') return
-    let tdDan = e.target
-    document.querySelectorAll('.dan').forEach(dan => dan.classList.remove('active'))
-    tdDan.classList.add('active')
-    godinaIz.value = yearDropdown.value
-    mesec.value = Number(monthDropdown.value) + 1
-    danIz.value = tdDan.innerText
-    dugme.removeAttribute('disabled')
+    if (e.target.classList.contains('dan') && e.target.innerText != '') {
+        let tdDan = e.target
+        document.querySelectorAll('.dan').forEach(dan => dan.classList.remove('active'))
+        tdDan.classList.add('active')
+        godinaIz.value = yearDropdown.value
+        mesec.value = Number(monthDropdown.value) + 1
+        danIz.value = tdDan.innerText
+        dugme.removeAttribute('disabled')
+    }
 })
 
 
@@ -156,45 +157,34 @@ if (danIz.value == '' || mesec.value == '' || godinaIz.value == '') {
     dugme.setAttribute('disabled', true)
 }
 
-function checkInputVal(val1, val2) {
-    console.log('change')
-    console.log(val1, val2)
-    if (val1 && val2) dugme.removeAttribute('disabled')
-}
-
 godinaIz.addEventListener('change', function () {
     if (mesec.value && danIz.value) dugme.removeAttribute('disabled')
-    if(Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 0)
-    else mesec.setAttribute('min', todaysDate.getMonth() + 1)
+    if (Number(godinaIz.value) == todaysDate.getFullYear()) mesec.setAttribute('min', todaysDate.getMonth())
+
+    else mesec.setAttribute('min', 0)
 })
 danIz.addEventListener('change', function () {
     if (mesec.value && godinaIz.value) dugme.removeAttribute('disabled')
-    if(danIz.value == danIz.max) danIz.value = Number(danIz.min) + 1
-    if(danIz.value == danIz.min) danIz.value = Number(danIz.max )- 1
 })
 mesec.addEventListener('change', function () {
     if (godinaIz.value && danIz.value) dugme.removeAttribute('disabled')
-    console.log('change')
     danIz.setAttribute('max', new Date(currentYear, mesec.value, 0).getDate() + 1)
-    if(Number(mesec.value) > todaysDate.getMonth() + 1) danIz.setAttribute('min', 0)
+    if (Number(mesec.value) == todaysDate.getMonth() + 1 && Number(godinaIz.value) == todaysDate.getFullYear()) danIz.setAttribute('min', todaysDate.getDate())
+    else danIz.setAttribute('min', 0)
 })
 
 document.querySelectorAll('input').forEach((inp, i) => {
-    inp.addEventListener('input', function(e){
-        if(inp.value.length > 2 && inp.value[0] == '0') {
+    inp.addEventListener('input', function (e) {
+        if (inp.value.length > 2 && inp.value[0] == '0') {
             inp.value = inp.value.slice(-2)
         }
         console.log(inp.value.slice(1, inp.value.length - 1))
-        if(e.inputType != "deleteContentBackward" && inp.value.length == 1){
-            inp.value = inp.value.padStart(2, 0)  
-        } 
+        if (e.inputType != "deleteContentBackward" && inp.value.length == 1) {
+            inp.value = inp.value.padStart(2, 0)
+        }
         console.log(inp.value.length)
-        if(inp.value == inp.max && i > 0) inp.value = Number(inp.min) + 1
-        if(inp.value == inp.min && i > 0) inp.value = Number(inp.max )- 1
-        // if(inp.value.length > 1) inp.value = Array(inp.value).splice(0, 1)
-        // if(i < 3 && inp.value == '00') inp.value = ''
-        // if(Number(godinaIz.value) > todaysDate.getFullYear()) mesec.setAttribute('min', 1)
-        // else mesec.setAttribute('min', todaysDate.getMonth + 1)
+        if (Number(inp.value) == Number(inp.max) && i > 0) inp.value = Number(inp.min) + 1
+        if (Number(inp.value) == Number(inp.min) && i > 0) inp.value = Number(inp.max) - 1
     })
 
 })
@@ -223,13 +213,15 @@ function startTimer() {
 let timer
 
 dugmeZaustavi.addEventListener('click', function () {
+    getDate(new Date().getFullYear(), new Date().getMonth() + 1)
     clearInterval(timer)
+
     dugmeZaustavi.classList.add('d-none')
     form.classList.remove('d-none')
     kontis.classList.add('d-none')
     dugme.setAttribute('disabled', true)
     h1.innerText = 'Unesite željeni datum ili izaberite na kalendaru:'
-    document.querySelector('.active').classList.remove('active')
+
 })
 
 function brojac() {
@@ -241,16 +233,20 @@ function brojac() {
     ]
     if (timer) clearInterval(timer)
     for (let i = 0; i < monthNames.length; i++) {
-        if(mesec.value.toLowerCase() == monthNames[i]) mesec.value = i+1
+        if (mesec.value.toLowerCase() == monthNames[i]) mesec.value = i + 1
     }
-    
-    console.log( new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value)))
+
+    console.log(new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value)))
     odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
     if (odbrojavanje.getTime() < todaysDate.getTime()) {
         alert('Ne možete uneti datum koji je već prošao!')
-        // clearInterval(timer)
-        return false
+        return
     }
+    getDate(Number(godinaIz.value), Number(mesec.value))
+    document.querySelectorAll('.dan').forEach(dan => {
+        if (Number(dan.innerText) == Number(danIz.value)) dan.classList.add('active')
+        else dan.classList.remove('active')
+    })
     h1.innerText = 'Ostalo je još tačno:'
     dugmeZaustavi.classList.remove('d-none')
     form.classList.add('d-none')
