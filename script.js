@@ -205,6 +205,7 @@ document.querySelectorAll('input').forEach((inp, i) => {
 
 function startTimer() {
     function tick() {
+        
         todaysDate = new Date()
         sati = todaysDate.getHours();
         minuti = todaysDate.getMinutes();
@@ -213,12 +214,11 @@ function startTimer() {
         minutiOd = minutiVal - minuti;
         sekundeOd = 59 - sekunde;
         dan = 1000 * 60 * 60 * 24;
-        kontis.innerHTML = `${String(Math.floor((odbrojavanje - todaysDate) / dan)).padStart(2, 0)}d: ${String(satiOd).padStart(2, 0)}č: ${String(minutiOd).padStart(2, 0)}m: ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
-        // if ((Math.floor((odbrojavanje - date) / dan)) == '0' && satiOd == '0' && minutiOd == '0' & sekundeOd == '0') {
-        if (odbrojavanje.getTime() == todaysDate.getTime()) {
-            clearInterval(timer)
-            h1.innerHTML = 'Dočekali ste!';
-        }
+        kontis.innerHTML = `${String(Math.floor((odbrojavanje - todaysDate) / dan)).padStart(2, 0)}d : ${String(satiOd).padStart(2, 0)}č : ${String(minutiOd).padStart(2, 0)}m : ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
+       if(kontis.innerText == '00d : 00č : 00m : 00s'){
+        clearInterval(timer)
+        h1.innerHTML = 'Dočekali ste!';
+    }
     }
     tick()
     const timer = setInterval(tick, 1000)
