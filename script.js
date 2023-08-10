@@ -11,6 +11,7 @@ let currentYear = todaysDate.getFullYear()
 let monthDropdown = document.querySelector('#month')
 let yearDropdown = document.querySelector('#year')
 //Odbrojavanje
+let allVal = []
 let kontis = document.querySelector('.odbrojavanje');
 let h1 = document.getElementById('countText');
 let form = document.querySelector('form')
@@ -31,9 +32,20 @@ let minutiOd
 let sekundeOd
 let dan = 1000 * 60 * 60 * 24;
 let odbrojavanje
-
+let timer
 
 getDate(currentYear, currentMonth)
+
+if(localStorage.getItem('allVal')){
+    allVal = JSON.parse(localStorage.getItem('allVal'))
+    let [a, b, c, d, e] = allVal
+    godinaIz.value = a
+    mesec.value = b
+    danIz.value = c
+    satiIz.value = d
+    minutiIz.value = e
+    countdown()
+}
 
 monthDropdown.addEventListener('change', function (e) {
     currentMonth = + monthDropdown.value + 1
@@ -138,20 +150,21 @@ function drawCalendar(weeks) {
     })
 }
 
-table.addEventListener('click', function (e) {
+function tableClick (e) {
     if (e.target.classList.contains('dan') && e.target.innerText != '') {
         let tdDan = e.target
         document.querySelectorAll('.dan').forEach(dan => dan.classList.remove('active'))
         tdDan.classList.add('active')
         godinaIz.value = yearDropdown.value
-        mesec.value = Number(monthDropdown.value) + 1
-        danIz.value = tdDan.innerText
+        mesec.value = String(Number(monthDropdown.value) + 1).padStart(2, '0')
+        danIz.value = tdDan.innerText.padStart(2, '0')
         dugme.removeAttribute('disabled')
     }
-})
+}
 
+table.addEventListener('click', tableClick)
 
-dugme.addEventListener('click', brojac)
+dugme.addEventListener('click', countdown)
 
 if (danIz.value == '' || mesec.value == '' || godinaIz.value == '') {
     dugme.setAttribute('disabled', true)
@@ -210,36 +223,38 @@ function startTimer() {
     const timer = setInterval(tick, 1000)
     return timer
 }
-let timer
+
 
 dugmeZaustavi.addEventListener('click', function () {
     getDate(new Date().getFullYear(), new Date().getMonth() + 1)
     clearInterval(timer)
-
     dugmeZaustavi.classList.add('d-none')
     form.classList.remove('d-none')
     kontis.classList.add('d-none')
     dugme.setAttribute('disabled', true)
     h1.innerText = 'Unesite željeni datum ili izaberite na kalendaru:'
-
+    table.addEventListener('click', tableClick)
+    table.style.pointerEvents = 'all'
+    localStorage.removeItem('allVal')
 })
 
-function brojac() {
+function countdown() {
     satiVal = satiIz.value ? 23 + Number(satiIz.value) : 23
     minutiVal = minutiIz.value ? 59 + Number(minutiIz.value) : 59
     monthNames = [
         "januar", "februar", "mart", "april", "maj", "jun",
         "jul", "avgust", "septembar", "oktobar", "novembar", "decembar"
     ]
-    if (timer) clearInterval(timer)
     for (let i = 0; i < monthNames.length; i++) {
         if (mesec.value.toLowerCase() == monthNames[i]) mesec.value = i + 1
     }
 
-    console.log(new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value)))
     odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
     if (odbrojavanje.getTime() < todaysDate.getTime()) {
         alert('Ne možete uneti datum koji je već prošao!')
+        document.querySelectorAll('.dan').forEach(dan => {
+            dan.classList.remove('active')
+        })
         return
     }
     getDate(Number(godinaIz.value), Number(mesec.value))
@@ -247,10 +262,14 @@ function brojac() {
         if (Number(dan.innerText) == Number(danIz.value)) dan.classList.add('active')
         else dan.classList.remove('active')
     })
+    allVal = [godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value]
+    localStorage.setItem('allVal', JSON.stringify(allVal))
     h1.innerText = 'Ostalo je još tačno:'
     dugmeZaustavi.classList.remove('d-none')
     form.classList.add('d-none')
     kontis.classList.remove('d-none')
+    table.removeEventListener('click', tableClick)
+    table.style.pointerEvents = 'none'
     timer = startTimer()
     godinaIz.value = ''
     mesec.value = ''
