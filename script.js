@@ -242,7 +242,7 @@ dugmeZaustavi.addEventListener('click', function () {
 })
 
 function countdown() {
-    satiVal = satiIz.value ? 23 + Number(satiIz.value) : 23
+    satiVal = satiIz.value ? Number(satiIz.value) - 1 : 23
     minutiVal = minutiIz.value ? 59 + Number(minutiIz.value) : 59
     monthNames = [
         "januar", "februar", "mart", "april", "maj", "jun",
