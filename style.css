@@ -5,6 +5,10 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif !important;
 }
 
+#firstTitle {
+    margin-bottom: -20px;
+}
+
 .table-holder {
     position: relative;
     width: fit-content;
