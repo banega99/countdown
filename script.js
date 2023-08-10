@@ -14,6 +14,7 @@ let yearDropdown = document.querySelector('#year')
 let allVal = []
 let kontis = document.querySelector('.odbrojavanje');
 let h1 = document.getElementById('countText');
+let countToText = document.getElementById('countToText')
 let form = document.querySelector('form')
 let godinaIz = document.querySelector('#godina');
 let mesec = document.querySelector('#mesec');
@@ -36,7 +37,7 @@ let timer
 
 getDate(currentYear, currentMonth)
 
-if(localStorage.getItem('allVal')){
+if (localStorage.getItem('allVal')) {
     allVal = JSON.parse(localStorage.getItem('allVal'))
     let [a, b, c, d, e] = allVal
     godinaIz.value = a
@@ -150,7 +151,7 @@ function drawCalendar(weeks) {
     })
 }
 
-function tableClick (e) {
+function tableClick(e) {
     if (e.target.classList.contains('dan') && e.target.innerText != '') {
         let tdDan = e.target
         document.querySelectorAll('.dan').forEach(dan => dan.classList.remove('active'))
@@ -233,8 +234,10 @@ dugmeZaustavi.addEventListener('click', function () {
     kontis.classList.add('d-none')
     dugme.setAttribute('disabled', true)
     h1.innerText = 'Unesite željeni datum ili izaberite na kalendaru:'
+    countToText.classList.add('d-none')
     table.addEventListener('click', tableClick)
     table.style.pointerEvents = 'all'
+    arrows.forEach(arrow => arrow.style.display = 'inline-block')
     localStorage.removeItem('allVal')
 })
 
@@ -265,11 +268,23 @@ function countdown() {
     allVal = [godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value]
     localStorage.setItem('allVal', JSON.stringify(allVal))
     h1.innerText = 'Ostalo je još tačno:'
+    let locale = navigator.language
+    console.log(locale)
+    countToText.classList.remove('d-none')
+    countToText.innerText = `do ${Intl.DateTimeFormat(locale, {
+        hour: 'numeric',
+        day: '2-digit',
+        minute: 'numeric',
+        month: '2-digit',
+        year: 'numeric',
+        weekday: 'long',
+    }).format(odbrojavanje)}`
     dugmeZaustavi.classList.remove('d-none')
     form.classList.add('d-none')
     kontis.classList.remove('d-none')
     table.removeEventListener('click', tableClick)
     table.style.pointerEvents = 'none'
+    arrows.forEach(arrow => arrow.style.display = 'none')
     timer = startTimer()
     godinaIz.value = ''
     mesec.value = ''
