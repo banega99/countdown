@@ -9,7 +9,7 @@
     position: relative;
     width: fit-content;
     height: fit-content;
-    margin: 40px auto;
+    margin: 40px auto 0px auto;
 }
 
 table {
@@ -147,6 +147,10 @@ tr:first-child td {
 
 .active {
     background-color: aqua!important;
+}
+
+.jedan {
+    margin-top: -20px;
 }
 
 .col-8 {
