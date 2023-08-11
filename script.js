@@ -35,22 +35,13 @@ let dan = 1000 * 60 * 60 * 24;
 let odbrojavanje
 let timer
 let locale = navigator.language
+let dateIntl
 let countNamePrompt
 let countName
 
 getDate(currentYear, currentMonth)
 
-if (localStorage.getItem('allVal')) {
-    allVal = JSON.parse(localStorage.getItem('allVal'))
-    let [a, b, c, d, e, f] = allVal
-    godinaIz.value = a
-    mesec.value = b
-    danIz.value = c
-    satiIz.value = d
-    minutiIz.value = e
-    countName = f
-    countdown()
-}
+
 
 monthDropdown.addEventListener('change', function (e) {
     currentMonth = + monthDropdown.value + 1
@@ -273,6 +264,55 @@ dugmeZaustavi.addEventListener('click', function () {
     countName = undefined
 })
 
+function resetCalendar() {
+    getDate(Number(godinaIz.value), Number(mesec.value))
+    document.querySelectorAll('.dan').forEach(dan => {
+        if (Number(dan.innerText) == Number(danIz.value)) dan.classList.add('active')
+        else dan.classList.remove('active')
+    })
+    dugmeZaustavi.classList.remove('d-none')
+    form.classList.add('d-none')
+    kontis.classList.remove('d-none')
+    table.removeEventListener('click', tableClick)
+    table.style.pointerEvents = 'none'
+    arrows.forEach(arrow => arrow.style.display = 'none')
+    godinaIz.value = ''
+    mesec.value = ''
+    danIz.value = ''
+    satiIz.value = ''
+    minutiIz.value = ''
+}
+
+if (localStorage.getItem('allVal')) {
+    todaysDate = new Date()
+    allVal = JSON.parse(localStorage.getItem('allVal'))
+    let [a, b, c, d, e, f] = allVal
+    godinaIz.value = a
+    mesec.value = b
+    danIz.value = c
+    satiIz.value = d
+    minutiIz.value = e
+    countName = f
+    odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
+    dateIntl = Intl.DateTimeFormat(locale, {
+        hour: 'numeric',
+        day: '2-digit',
+        minute: 'numeric',
+        month: '2-digit',
+        year: 'numeric',
+        weekday: 'long',
+    }).format(odbrojavanje)
+    if (odbrojavanje.getTime() <= todaysDate.getTime()) {
+        resetCalendar()
+        kontis.innerText = '00d : 00č : 00m : 00s'
+        dugmeZaustavi.innerText = 'Kraj'
+        h1.innerHTML = `Dočekali ste <b>${countName}<span class="small">(${dateIntl})</span></b>!`;
+        countToText.classList.add('d-none')
+        localStorage.removeItem('allVal')
+    } else countdown()
+
+}
+
 function countdown() {
     dugmeZaustavi.innerText = 'Zaustavi'
     todaysDate = new Date()
@@ -296,14 +336,9 @@ function countdown() {
     for (let i = 0; i < monthNames.length; i++) {
         if (mesec.value.toLowerCase() == monthNames[i]) mesec.value = i + 1
     }
-
     odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
-    if (odbrojavanje.getTime() <= todaysDate.getTime() ||
-        todaysDate.getFullYear() >= godinaIz.value &&
-        todaysDate.getMonth() >= mesec.value - 1 &&
-        todaysDate.getDate() >= danIz.value &&
-        todaysDate.getHours() >= satiIz.value &&
-        todaysDate.getMinutes() >= minutiIz.value) {
+    console.log(odbrojavanje, todaysDate)
+    if (odbrojavanje.getTime() <= todaysDate.getTime()) {
         alert('Ne možete uneti datum koji je već prošao!')
         todaysDate = new Date()
         document.querySelectorAll('.dan').forEach(dan => {
@@ -311,10 +346,8 @@ function countdown() {
         })
         return
     }
-    locale = navigator.language
     countNamePrompt = countName ? countName : prompt('Unesite naziv tajmera')
-    
-    let dateIntl = Intl.DateTimeFormat(locale, {
+    dateIntl = Intl.DateTimeFormat(locale, {
         hour: 'numeric',
         day: '2-digit',
         minute: 'numeric',
@@ -322,30 +355,15 @@ function countdown() {
         year: 'numeric',
         weekday: 'long',
     }).format(odbrojavanje)
-    if(!countNamePrompt) countNamePrompt = dateIntl
+    if (!countNamePrompt) countNamePrompt = dateIntl
     countName = countNamePrompt != dateIntl ? `${countNamePrompt}<span class="small">(${dateIntl})</span>` : countNamePrompt
-    getDate(Number(godinaIz.value), Number(mesec.value))
-    document.querySelectorAll('.dan').forEach(dan => {
-        if (Number(dan.innerText) == Number(danIz.value)) dan.classList.add('active')
-        else dan.classList.remove('active')
-    })
+    countToText.classList.remove('d-none')
+    countToText.innerHTML = `do <b>${countName}</b>`
     allVal = [godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value, countNamePrompt]
     localStorage.setItem('allVal', JSON.stringify(allVal))
     h1.innerText = 'Ostalo je još tačno:'
-    countToText.classList.remove('d-none')
-    countToText.innerHTML = `do <b>${countName}</b>`
-    dugmeZaustavi.classList.remove('d-none')
-    form.classList.add('d-none')
-    kontis.classList.remove('d-none')
-    table.removeEventListener('click', tableClick)
-    table.style.pointerEvents = 'none'
-    arrows.forEach(arrow => arrow.style.display = 'none')
     timer = startTimer()
-    godinaIz.value = ''
-    mesec.value = ''
-    danIz.value = ''
-    satiIz.value = ''
-    minutiIz.value = ''
+    resetCalendar()
 
 
 }
