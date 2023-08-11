@@ -35,7 +35,7 @@ let dan = 1000 * 60 * 60 * 24;
 let odbrojavanje
 let timer
 let locale = navigator.language
-let countNamePrompt 
+let countNamePrompt
 let countName
 
 getDate(currentYear, currentMonth)
@@ -255,6 +255,8 @@ function startTimer() {
 }
 
 
+
+
 dugmeZaustavi.addEventListener('click', function () {
     getDate(new Date().getFullYear(), new Date().getMonth() + 1)
     clearInterval(timer)
@@ -273,6 +275,7 @@ dugmeZaustavi.addEventListener('click', function () {
 
 function countdown() {
     dugmeZaustavi.innerText = 'Zaustavi'
+    todaysDate = new Date()
     satiVal = satiIz.value ? 23 + Number(satiIz.value) : 23
     minutiVal = minutiIz.value ? 59 + Number(minutiIz.value) : 59
     if (todaysDate.getFullYear() == godinaIz.value &&
@@ -302,14 +305,16 @@ function countdown() {
         todaysDate.getHours() >= satiIz.value &&
         todaysDate.getMinutes() >= minutiIz.value) {
         alert('Ne možete uneti datum koji je već prošao!')
+        todaysDate = new Date()
         document.querySelectorAll('.dan').forEach(dan => {
             dan.classList.remove('active')
         })
         return
     }
     locale = navigator.language
-    countNamePrompt = countName? countName : prompt('Unesite naziv tajmera')
-    countName = countNamePrompt? countNamePrompt : Intl.DateTimeFormat(locale, {
+    countNamePrompt = countName ? countName : prompt('Unesite naziv tajmera')
+    
+    let dateIntl = Intl.DateTimeFormat(locale, {
         hour: 'numeric',
         day: '2-digit',
         minute: 'numeric',
@@ -317,12 +322,14 @@ function countdown() {
         year: 'numeric',
         weekday: 'long',
     }).format(odbrojavanje)
+    if(!countNamePrompt) countNamePrompt = dateIntl
+    countName = countNamePrompt != dateIntl ? `${countNamePrompt}<span class="small">(${dateIntl})</span>` : countNamePrompt
     getDate(Number(godinaIz.value), Number(mesec.value))
     document.querySelectorAll('.dan').forEach(dan => {
         if (Number(dan.innerText) == Number(danIz.value)) dan.classList.add('active')
         else dan.classList.remove('active')
     })
-    allVal = [godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value, countName]
+    allVal = [godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value, countNamePrompt]
     localStorage.setItem('allVal', JSON.stringify(allVal))
     h1.innerText = 'Ostalo je još tačno:'
     countToText.classList.remove('d-none')
@@ -339,4 +346,6 @@ function countdown() {
     danIz.value = ''
     satiIz.value = ''
     minutiIz.value = ''
+
+
 }
