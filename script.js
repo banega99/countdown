@@ -151,6 +151,19 @@ function drawCalendar(weeks) {
     })
 }
 
+function setHoursAndMinutes() {
+    if (todaysDate.getFullYear() == godinaIz.value &&
+        todaysDate.getMonth() == mesec.value - 1 &&
+        todaysDate.getDate() == danIz.value) {
+        satiIz.value = todaysDate.getHours()
+        minutiIz.value = todaysDate.getMinutes() + 1
+    } else{
+        satiIz.value = ''
+        minutiIz.value = ''
+    }
+    
+}
+
 function tableClick(e) {
     if (e.target.classList.contains('dan') && e.target.innerText != '') {
         let tdDan = e.target
@@ -159,6 +172,7 @@ function tableClick(e) {
         godinaIz.value = yearDropdown.value
         mesec.value = String(Number(monthDropdown.value) + 1).padStart(2, '0')
         danIz.value = tdDan.innerText.padStart(2, '0')
+        setHoursAndMinutes()
         dugme.removeAttribute('disabled')
     }
 }
@@ -171,54 +185,63 @@ if (danIz.value == '' || mesec.value == '' || godinaIz.value == '') {
     dugme.setAttribute('disabled', true)
 }
 
-godinaIz.addEventListener('change', function () {
-    if (mesec.value && danIz.value) dugme.removeAttribute('disabled')
-    if (Number(godinaIz.value) == todaysDate.getFullYear()) mesec.setAttribute('min', todaysDate.getMonth())
-
-    else mesec.setAttribute('min', 0)
-})
-danIz.addEventListener('change', function () {
-    if (mesec.value && godinaIz.value) dugme.removeAttribute('disabled')
-})
-mesec.addEventListener('change', function () {
-    if (godinaIz.value && danIz.value) dugme.removeAttribute('disabled')
-    danIz.setAttribute('max', new Date(currentYear, mesec.value, 0).getDate() + 1)
-    if (Number(mesec.value) == todaysDate.getMonth() + 1 && Number(godinaIz.value) == todaysDate.getFullYear()) danIz.setAttribute('min', todaysDate.getDate())
-    else danIz.setAttribute('min', 0)
-})
-
 document.querySelectorAll('input').forEach((inp, i) => {
     inp.addEventListener('input', function (e) {
         if (inp.value.length > 2 && inp.value[0] == '0') {
             inp.value = inp.value.slice(-2)
         }
-        console.log(inp.value.slice(1, inp.value.length - 1))
         if (e.inputType != "deleteContentBackward" && inp.value.length == 1) {
             inp.value = inp.value.padStart(2, 0)
         }
-        console.log(inp.value.length)
         if (Number(inp.value) == Number(inp.max) && i > 0) inp.value = Number(inp.min) + 1
         if (Number(inp.value) == Number(inp.min) && i > 0) inp.value = Number(inp.max) - 1
+        if (i < 3) {
+            setHoursAndMinutes()
+        }
+        if (i > 2 && godinaIz.value == '' && mesec.value == '' && danIz.value == '') {
+            godinaIz.value = todaysDate.getFullYear()
+            mesec.value = todaysDate.getMonth() + 1
+            danIz.value = todaysDate.getDate()
+            satiIz.value = todaysDate.getHours()
+            dugme.removeAttribute('disabled')
+        }
+        if (i == 0) {
+            if (mesec.value && danIz.value) dugme.removeAttribute('disabled')
+            if (Number(godinaIz.value) == todaysDate.getFullYear()) mesec.setAttribute('min', todaysDate.getMonth())
+            else mesec.setAttribute('min', 0)
+        }
+        if (i == 1) {
+            if (godinaIz.value && danIz.value) dugme.removeAttribute('disabled')
+            danIz.setAttribute('max', new Date(currentYear, mesec.value, 0).getDate() + 1)
+            if (Number(mesec.value) == todaysDate.getMonth() + 1 && Number(godinaIz.value) == todaysDate.getFullYear()) danIz.setAttribute('min', todaysDate.getDate() - 1)
+            else danIz.setAttribute('min', 0)
+        }
+        if (i == 2) {
+            if (mesec.value && godinaIz.value) dugme.removeAttribute('disabled')
+        }
+
     })
 
 })
 
 function startTimer() {
     function tick() {
-        
         todaysDate = new Date()
         sati = todaysDate.getHours();
         minuti = todaysDate.getMinutes();
         sekunde = todaysDate.getSeconds();
         satiOd = satiVal - sati;
         minutiOd = minutiVal - minuti;
+        if (minutiOd >= 60) {
+            minutiOd = minutiOd - 60
+            satiOd = satiOd + 1
+        }
         sekundeOd = 59 - sekunde;
-        dan = 1000 * 60 * 60 * 24;
         kontis.innerHTML = `${String(Math.floor((odbrojavanje - todaysDate) / dan)).padStart(2, 0)}d : ${String(satiOd).padStart(2, 0)}č : ${String(minutiOd).padStart(2, 0)}m : ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
-       if(kontis.innerText == '00d : 00č : 00m : 00s'){
-        clearInterval(timer)
-        h1.innerHTML = 'Dočekali ste!';
-    }
+        if (kontis.innerText == '00d : 00č : 00m : 00s') {
+            clearInterval(timer)
+            h1.innerHTML = 'Dočekali ste!';
+        }
     }
     tick()
     const timer = setInterval(tick, 1000)
@@ -242,8 +265,19 @@ dugmeZaustavi.addEventListener('click', function () {
 })
 
 function countdown() {
-    satiVal = satiIz.value ? Number(satiIz.value) - 1 : 23
+    satiVal = satiIz.value ? 23 + Number(satiIz.value) : 23
     minutiVal = minutiIz.value ? 59 + Number(minutiIz.value) : 59
+    if (todaysDate.getFullYear() == godinaIz.value &&
+        todaysDate.getMonth() == mesec.value - 1 &&
+        todaysDate.getDate() == danIz.value) {
+        satiVal = Number(satiIz.value) - 1
+    }
+    if (todaysDate.getFullYear() == godinaIz.value &&
+        todaysDate.getMonth() == mesec.value - 1 &&
+        todaysDate.getDate() == danIz.value &&
+        todaysDate.getHours() == satiIz.value) {
+        satiOd = 0
+    }
     monthNames = [
         "januar", "februar", "mart", "april", "maj", "jun",
         "jul", "avgust", "septembar", "oktobar", "novembar", "decembar"
@@ -269,7 +303,6 @@ function countdown() {
     localStorage.setItem('allVal', JSON.stringify(allVal))
     h1.innerText = 'Ostalo je još tačno:'
     let locale = navigator.language
-    console.log(locale)
     countToText.classList.remove('d-none')
     countToText.innerText = `do ${Intl.DateTimeFormat(locale, {
         hour: 'numeric',
