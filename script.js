@@ -157,11 +157,11 @@ function setHoursAndMinutes() {
         todaysDate.getDate() == danIz.value) {
         satiIz.value = todaysDate.getHours()
         minutiIz.value = todaysDate.getMinutes() + 1
-    } else{
+    } else {
         satiIz.value = ''
         minutiIz.value = ''
     }
-    
+
 }
 
 function tableClick(e) {
@@ -287,7 +287,12 @@ function countdown() {
     }
 
     odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
-    if (odbrojavanje.getTime() < todaysDate.getTime()) {
+    if (odbrojavanje.getTime() <= todaysDate.getTime() ||
+        todaysDate.getFullYear() >= godinaIz.value &&
+        todaysDate.getMonth() >= mesec.value - 1 &&
+        todaysDate.getDate() >= danIz.value &&
+        todaysDate.getHours() >= satiIz.value &&
+        todaysDate.getMinutes() >= minutiIz.value) {
         alert('Ne možete uneti datum koji je već prošao!')
         document.querySelectorAll('.dan').forEach(dan => {
             dan.classList.remove('active')
