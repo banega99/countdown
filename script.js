@@ -162,6 +162,7 @@ function setHoursAndMinutes() {
 function tableClick(e) {
     if (e.target.classList.contains('dan') && e.target.innerText != '') {
         let tdDan = e.target
+        todaysDate = new Date()
         document.querySelectorAll('.dan').forEach(dan => dan.classList.remove('active'))
         tdDan.classList.add('active')
         godinaIz.value = yearDropdown.value
@@ -182,6 +183,7 @@ if (danIz.value == '' || mesec.value == '' || godinaIz.value == '') {
 
 document.querySelectorAll('input').forEach((inp, i) => {
     inp.addEventListener('input', function (e) {
+        todaysDate = new Date()
         if (inp.value.length > 2 && inp.value[0] == '0') {
             inp.value = inp.value.slice(-2)
         }
