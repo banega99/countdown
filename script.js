@@ -232,7 +232,8 @@ function startTimer() {
         if (minutiOd >= 60) {
             minutiOd = minutiOd - 60
             satiOd = satiOd + 1
-        }
+        } 
+        if (satiOd >= 24) satiOd -= 24
         sekundeOd = 59 - sekunde;
         kontis.innerHTML = `${String(Math.floor((odbrojavanje - todaysDate) / dan)).padStart(2, 0)}d : ${String(satiOd).padStart(2, 0)}č : ${String(minutiOd).padStart(2, 0)}m : ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
         if (kontis.innerText == '00d : 00č : 00m : 00s') {
