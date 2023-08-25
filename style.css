@@ -187,6 +187,31 @@ input {
     align-items: center;
 }
 
+.events {
+    border-radius: 5px;
+    background-color: lightblue;
+}
+
+.div {
+    background-color: lightblue;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s;
+    border-bottom: 1px lightslategray solid;
+}
+
+.div:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+}
+
+.event-name {
+    align-items: center;
+}
+
 @media(max-width:768px) {
     input {
         width: 25% !important;

@@ -5,6 +5,7 @@ const title = document.querySelector('#title')
 const arrowLeft = document.querySelector('.left')
 const arrowRight = document.querySelector('.right')
 const arrows = document.querySelectorAll('.arrow')
+let eventsCont = document.querySelector('.events')
 let todaysDate = new Date()
 let currentMonth = todaysDate.getMonth() + 1
 let currentYear = todaysDate.getFullYear()
@@ -38,6 +39,18 @@ let locale = navigator.language
 let dateIntl
 let countNamePrompt
 let countName
+let events = []
+
+class Event {
+    constructor(id, name, yearVal, monthVal, dayVal, minutesVal) {
+        this.id = id;
+        this.name = name,
+            this.year = yearVal,
+            this.month = monthVal,
+            this.day = dayVal,
+            this.minutes = minutesVal
+    }
+}
 
 getDate(currentYear, currentMonth)
 
@@ -232,7 +245,7 @@ function startTimer() {
         if (minutiOd >= 60) {
             minutiOd = minutiOd - 60
             satiOd = satiOd + 1
-        } 
+        }
         if (satiOd >= 24) satiOd -= 24
         sekundeOd = 59 - sekunde;
         kontis.innerHTML = `${String(Math.floor((odbrojavanje - todaysDate) / dan)).padStart(2, 0)}d : ${String(satiOd).padStart(2, 0)}č : ${String(minutiOd).padStart(2, 0)}m : ${sekundeOd == 60 ? '00' : String(sekundeOd).padStart(2, 0)}s`;
@@ -251,7 +264,9 @@ function startTimer() {
 
 
 
-dugmeZaustavi.addEventListener('click', function () {
+dugmeZaustavi.addEventListener('click', endCountdown)
+
+function endCountdown() {
     getDate(new Date().getFullYear(), new Date().getMonth() + 1)
     clearInterval(timer)
     dugmeZaustavi.classList.add('d-none')
@@ -265,7 +280,7 @@ dugmeZaustavi.addEventListener('click', function () {
     arrows.forEach(arrow => arrow.style.display = 'inline-block')
     localStorage.removeItem('allVal')
     countName = undefined
-})
+}
 
 function resetCalendar() {
     getDate(Number(godinaIz.value), Number(mesec.value))
@@ -286,37 +301,96 @@ function resetCalendar() {
     minutiIz.value = ''
 }
 
-if (localStorage.getItem('allVal')) {
-    todaysDate = new Date()
-    allVal = JSON.parse(localStorage.getItem('allVal'))
-    let [a, b, c, d, e, f] = allVal
-    godinaIz.value = a
-    mesec.value = b
-    danIz.value = c
-    satiIz.value = d
-    minutiIz.value = e
-    countName = f
-    odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
-    dateIntl = Intl.DateTimeFormat(locale, {
-        hour: 'numeric',
-        day: '2-digit',
-        minute: 'numeric',
-        month: '2-digit',
-        year: 'numeric',
-        weekday: 'long',
-    }).format(odbrojavanje)
-    if (odbrojavanje.getTime() <= todaysDate.getTime()) {
-        resetCalendar()
-        kontis.innerText = '00d : 00č : 00m : 00s'
-        dugmeZaustavi.innerText = 'Kraj'
-        h1.innerHTML = `Dočekali ste <b>${countName}<span class="small">(${dateIntl})</span></b>!`;
-        countToText.classList.add('d-none')
-        localStorage.removeItem('allVal')
-    } else countdown()
+// if (localStorage.getItem('allVal')) {
+//     todaysDate = new Date()
+//     allVal = JSON.parse(localStorage.getItem('allVal'))
+//     let [a, b, c, d, e, f] = allVal
+//     godinaIz.value = a
+//     mesec.value = b
+//     danIz.value = c
+//     satiIz.value = d
+//     minutiIz.value = e
+//     countName = f
+//     odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
+//     dateIntl = Intl.DateTimeFormat(locale, {
+//         hour: 'numeric',
+//         day: '2-digit',
+//         minute: 'numeric',
+//         month: '2-digit',
+//         year: 'numeric',
+//         weekday: 'long',
+//     }).format(odbrojavanje)
+//     if (odbrojavanje.getTime() <= todaysDate.getTime()) {
+//         resetCalendar()
+//         kontis.innerText = '00d : 00č : 00m : 00s'
+//         dugmeZaustavi.innerText = 'Kraj'
+//         h1.innerHTML = `Dočekali ste <b>${countName}<span class="small">(${dateIntl})</span></b>!`;
+//         countToText.classList.add('d-none')
+//         localStorage.removeItem('allVal')
+//     } else countdown()
 
+// }
+
+function createEventDiv(event, i) {
+    let eventDiv = document.createElement('div')
+    eventDiv.className = 'div'
+    eventDiv.innerHTML = `<div data-id='${event.id}' class='event-name d-flex justify-content-between w-100 me-auto ms-auto'><h5 class='name'>${i + 1}. ${event.name}</h5><button click='deleteEvent($event)' class='btn btn-danger del'>Izbriši</button></div>`
+    eventsCont.insertAdjacentElement("beforeend", eventDiv)
 }
 
-function countdown() {
+if (localStorage.getItem('events')) {
+    events = JSON.parse(localStorage.getItem('events'))
+    events.forEach((event, i) => {
+        createEventDiv(event, i)
+    })
+    eventsCont.addEventListener('click', function (e) {
+        if (e.target.closest('.del')) {
+            let eventDiv = e.target.closest('.div')
+            let eventId = eventDiv.firstChild.dataset.id
+            console.log(eventDiv)
+            let eventText = e.target.closest('.event-name').firstChild.innerText.split(' ')[1]
+            events = events.filter(event => event.id != eventId)
+            localStorage.setItem('events', JSON.stringify(events))
+            eventsCont.removeChild(eventDiv)
+            if (eventId == countToText.dataset.id) endCountdown()
+        } else {
+            let eTarget = e.target.closest('.event-name')
+            let eTargetId = eTarget.dataset
+            console.log(eTargetId.id)
+            let event = events.find(event => event.id === eTargetId.id)
+            console.log(event)
+            let { id, name, year, month, day, hours, minutes } = event
+            godinaIz.value = year
+            mesec.value = month
+            danIz.value = day
+            satiIz.value = hours
+            minutiIz.value = minutes
+            countToText.setAttribute('data-id', id)
+            countName = name
+            odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
+            dateIntl = Intl.DateTimeFormat(locale, {
+                hour: 'numeric',
+                day: '2-digit',
+                minute: 'numeric',
+                month: '2-digit',
+                year: 'numeric',
+                weekday: 'long',
+            }).format(odbrojavanje)
+            if (odbrojavanje.getTime() <= todaysDate.getTime()) {
+                resetCalendar()
+                kontis.innerText = '00d : 00č : 00m : 00s'
+                dugmeZaustavi.innerText = 'Kraj'
+                h1.innerHTML = `Dočekali ste <b>${countName}<span class="small">(${dateIntl})</span></b>!`;
+                countToText.classList.add('d-none')
+                localStorage.removeItem('allVal')
+            } else countdown('old')
+        }
+
+
+    })
+}
+
+function countdown(oldEvent) {
     dugmeZaustavi.innerText = 'Zaustavi'
     todaysDate = new Date()
     satiVal = satiIz.value ? 23 + Number(satiIz.value) : 23
@@ -360,10 +434,18 @@ function countdown() {
     }).format(odbrojavanje)
     if (!countNamePrompt) countNamePrompt = dateIntl
     countName = countNamePrompt != dateIntl ? `${countNamePrompt}<span class="small">(${dateIntl})</span>` : countNamePrompt
+    let dateIso = new Date().toISOString()
     countToText.classList.remove('d-none')
     countToText.innerHTML = `do <b>${countName}</b>`
-    allVal = [godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value, countNamePrompt]
-    localStorage.setItem('allVal', JSON.stringify(allVal))
+    countToText.setAttribute('data-id', dateIso)
+    if (oldEvent !== 'old') {
+        let event = new Event(dateIso, countNamePrompt, godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value)
+        events.push(event)
+        console.log(event, events)
+        localStorage.setItem('allVal', JSON.stringify(allVal))
+        localStorage.setItem('events', JSON.stringify(events))
+        createEventDiv(event, events.length - 1)
+    }
     h1.innerText = 'Ostalo je još tačno:'
     timer = startTimer()
     resetCalendar()
