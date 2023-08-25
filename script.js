@@ -40,6 +40,7 @@ let dateIntl
 let countNamePrompt
 let countName
 let events = []
+let eventId
 
 class Event {
     constructor(id, name, yearVal, monthVal, dayVal, minutesVal) {
@@ -365,7 +366,8 @@ if (localStorage.getItem('events')) {
             danIz.value = day
             satiIz.value = hours
             minutiIz.value = minutes
-            countToText.setAttribute('data-id', id)
+            eventId = id
+            countToText.setAttribute('data-id', eventId)
             countName = name
             odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
             dateIntl = Intl.DateTimeFormat(locale, {
@@ -437,9 +439,10 @@ function countdown(oldEvent) {
     let dateIso = new Date().toISOString()
     countToText.classList.remove('d-none')
     countToText.innerHTML = `do <b>${countName}</b>`
-    countToText.setAttribute('data-id', dateIso)
+    countToText.setAttribute('data-id', eventId)
     if (oldEvent !== 'old') {
         let event = new Event(dateIso, countNamePrompt, godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value)
+        countToText.setAttribute('data-id', dateIso)
         events.push(event)
         console.log(event, events)
         localStorage.setItem('allVal', JSON.stringify(allVal))
