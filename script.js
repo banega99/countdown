@@ -340,7 +340,9 @@ function createEventDiv(event, i) {
 }
 
 if (localStorage.getItem('events')) {
+    
     events = JSON.parse(localStorage.getItem('events'))
+    if(events.length > 0) eventsCont.parentElement.classList.remove('d-none')
     events.forEach((event, i) => {
         createEventDiv(event, i)
     })
@@ -351,6 +353,7 @@ if (localStorage.getItem('events')) {
             console.log(eventDiv)
             let eventText = e.target.closest('.event-name').firstChild.innerText.split(' ')[1]
             events = events.filter(event => event.id != eventId)
+            if(events.length == 0) eventsCont.parentElement.classList.add('d-none')
             localStorage.setItem('events', JSON.stringify(events))
             eventsCont.removeChild(eventDiv)
             if (eventId == countToText.dataset.id) endCountdown()
@@ -441,6 +444,7 @@ function countdown(oldEvent) {
     countToText.innerHTML = `do <b>${countName}</b>`
     countToText.setAttribute('data-id', eventId)
     if (oldEvent !== 'old') {
+        eventsCont.parentElement.classList.remove('d-none')
         let event = new Event(dateIso, countNamePrompt, godinaIz.value, mesec.value, danIz.value, satiIz.value, minutiIz.value)
         countToText.setAttribute('data-id', dateIso)
         events.push(event)
