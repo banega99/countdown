@@ -43,12 +43,13 @@ let events = []
 let eventId
 
 class Event {
-    constructor(id, name, yearVal, monthVal, dayVal, minutesVal) {
+    constructor(id, name, yearVal, monthVal, dayVal, hoursVal, minutesVal) {
         this.id = id;
         this.name = name,
             this.year = yearVal,
             this.month = monthVal,
             this.day = dayVal,
+            this.hours = hoursVal,
             this.minutes = minutesVal
     }
 }
@@ -370,6 +371,7 @@ if (localStorage.getItem('events')) {
             satiIz.value = hours
             minutiIz.value = minutes
             eventId = id
+            console.log(hours)
             countToText.setAttribute('data-id', eventId)
             countName = name
             odbrojavanje = new Date(Number(godinaIz.value), Number(mesec.value) - 1, Number(danIz.value), Number(satiIz.value), Number(minutiIz.value));
@@ -449,7 +451,6 @@ function countdown(oldEvent) {
         countToText.setAttribute('data-id', dateIso)
         events.push(event)
         console.log(event, events)
-        localStorage.setItem('allVal', JSON.stringify(allVal))
         localStorage.setItem('events', JSON.stringify(events))
         createEventDiv(event, events.length - 1)
     }
